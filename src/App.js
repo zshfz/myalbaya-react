@@ -1,4 +1,5 @@
 import style from "./styles/App.module.scss";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "./context/Context";
 import Footer from "./components/Footer";
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
     element: <RegisterIntro />,
   },
   {
-    path: "/register",
+    path: "/register/:id",
     element: <Register />,
   },
 ]);
