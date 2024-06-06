@@ -1,24 +1,24 @@
 import axios from "axios";
-import { useState, useContext } from "react";
-import { Context } from "../context/Context";
+import { useState } from "react";
 
 export const useAxiosPost = (
   url,
   input,
   message = "",
   method = "",
-  session = ""
+  session = "",
+  setCurrentUser = ""
 ) => {
   const [error, setError] = useState("");
-
-  const { setCurrentUser } = useContext(Context);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const isSessionExist = session ? { withCredentials: true } : "";
       const res = await axios.post(url, input, isSessionExist);
-      setCurrentUser(res.data);
+      if (setCurrentUser) {
+        setCurrentUser(res.data);
+      }
       if (message) {
         alert(message);
       }

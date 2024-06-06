@@ -1,9 +1,13 @@
 import style from "../styles/LoginModal.module.scss";
+import { useContext } from "react";
 import { Modal } from "react-bootstrap";
 import { useInput } from "../hooks/useInput";
 import { useAxiosPost } from "../hooks/useAxiosPost";
+import { Context } from "../context/Context";
 
 const LoginModal = (props) => {
+  const { setCurrentUser } = useContext(Context);
+
   const [email, handleEmailChange] = useInput("");
   const [password1, handlePassword1Change] = useInput("");
 
@@ -15,7 +19,8 @@ const LoginModal = (props) => {
     },
     "",
     "",
-    ""
+    "",
+    setCurrentUser
   );
 
   return (
