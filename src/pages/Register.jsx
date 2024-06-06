@@ -1,9 +1,10 @@
 import style from "../styles/Register.module.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useInput } from "../hooks/useInput";
 import { useAxiosPost } from "../hooks/useAxiosPost";
 
 const Register = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [name, handleNameChange] = useInput("");
@@ -22,7 +23,9 @@ const Register = () => {
         password1: password1,
         password2: password2,
       },
-      "회원가입이 완료되었습니다. 홈 화면으로 이동합니다."
+      "회원가입이 완료되었습니다. 홈 화면으로 이동합니다.",
+      () => navigate("/"),
+      ""
     );
 
   const { error: errorBoss, handleSubmit: handleBossSubmit } = useAxiosPost(
@@ -34,7 +37,9 @@ const Register = () => {
       password1: password1,
       password2: password2,
     },
-    "회원가입이 완료되었습니다. 홈 화면으로 이동합니다."
+    "회원가입이 완료되었습니다. 홈 화면으로 이동합니다.",
+    () => navigate("/"),
+    ""
   );
 
   return (

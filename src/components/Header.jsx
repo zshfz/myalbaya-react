@@ -9,7 +9,7 @@ import LoginModal from "./LoginModal";
 const Header = () => {
   const [show, setShow] = useState(false); //모달
 
-  const { isToggled, setIsToggled } = useContext(Context);
+  const { isToggled, setIsToggled, currentUser } = useContext(Context);
 
   const navigate = useNavigate();
 
@@ -44,15 +44,29 @@ const Header = () => {
         <Span $backgroundColor={isToggled ? "skyblue" : "#FAEB78"}>
           전체메뉴
         </Span>
-        <span onClick={handleShow}>로그인</span>
-        <LoginModal show={show} handleClose={handleClose} />
-        <span
-          onClick={() => {
-            navigate("/registerintro");
-          }}
-        >
-          회원가입
-        </span>
+        {currentUser ? (
+          <>
+            <span className={style.userNickname}>
+              {currentUser.nickname}
+              {currentUser.employmentType === "employee"
+                ? " 알바생님"
+                : " 자영업자님"}
+            </span>
+            <span>로그아웃</span>
+          </>
+        ) : (
+          <>
+            <span onClick={handleShow}>로그인</span>
+            <LoginModal show={show} handleClose={handleClose} />
+            <span
+              onClick={() => {
+                navigate("/registerintro");
+              }}
+            >
+              회원가입
+            </span>
+          </>
+        )}
       </div>
     </div>
   );
