@@ -5,7 +5,7 @@ export const useAxiosPost = (
   url,
   input,
   message = "",
-  method = "",
+  navigate = "",
   session = "",
   setCurrentUser = ""
 ) => {
@@ -22,8 +22,8 @@ export const useAxiosPost = (
       if (message) {
         alert(message);
       }
-      if (method) {
-        method();
+      if (navigate) {
+        navigate();
       }
     } catch (error) {
       setError(error.response.data);
