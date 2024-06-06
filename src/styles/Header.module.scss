@@ -1,0 +1,22 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  .left {
+    .mainBanner {
+      display: block;
+      font-size: 30px;
+    }
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin: 5px;
+      cursor: pointer;
+    }
+  }
+}
