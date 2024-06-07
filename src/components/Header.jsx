@@ -1,6 +1,7 @@
 import style from "../styles/Header.module.scss";
 import styled from "styled-components";
-import { useContext, useState } from "react";
+import axios from "axios";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Context } from "../context/Context";
 import ToggleButton from "../components/ToggleButton";
@@ -9,7 +10,8 @@ import LoginModal from "./LoginModal";
 const Header = () => {
   const [show, setShow] = useState(false); //모달
 
-  const { isToggled, setIsToggled, currentUser } = useContext(Context);
+  const { isToggled, setIsToggled, currentUser, setCurrentUser } =
+    useContext(Context);
 
   const navigate = useNavigate();
 
@@ -22,6 +24,22 @@ const Header = () => {
   const handleShow = () => {
     setShow(true);
   };
+
+  const logout = async () => {
+    await axios.get("http://localhost:8080/logout", {
+      withCredentials: true,
+    });
+    setCurrentUser("");
+    localStorage.removeItem("currentUser");
+  };
+
+  //새로고침 로그아웃 방지
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
+  }, [setCurrentUser]);
 
   return (
     <div className={style.container}>
@@ -52,7 +70,7 @@ const Header = () => {
                 ? " 알바생님"
                 : " 자영업자님"}
             </span>
-            <span>로그아웃</span>
+            <span onClick={logout}>로그아웃</span>
           </>
         ) : (
           <>

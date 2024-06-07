@@ -18,6 +18,7 @@ export const useAxiosPost = (
       const res = await axios.post(url, input, isSessionExist);
       if (setCurrentUser) {
         setCurrentUser(res.data);
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
       }
       if (message) {
         alert(message);

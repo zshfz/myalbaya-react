@@ -1,0 +1,48 @@
+.container {
+  .boards {
+    display: flex;
+    justify-content: space-between;
+
+    .board {
+      width: 320px;
+      height: 250px;
+      border: 1px solid black;
+      border-radius: 8px;
+
+      .boardTitle {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        padding: 5px;
+
+        .more {
+          font-size: 13px;
+          color: lightgray;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .ratingContainer {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      background-color: lightgray;
+      width: 200px;
+      height: 250px;
+      border-radius: 8px;
+
+      span {
+        padding: 5px;
+      }
+
+      .rating {
+        margin: 5px;
+      }
+    }
+  }
+}
