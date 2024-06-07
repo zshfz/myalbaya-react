@@ -2,18 +2,31 @@ import style from "../styles/Header.module.scss";
 import styled from "styled-components";
 import axios from "axios";
 import { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Context } from "../context/Context";
 import ToggleButton from "../components/ToggleButton";
 import LoginModal from "./LoginModal";
+import DropDownMenu from "./DropDownMenu";
 
 const Header = () => {
   const [show, setShow] = useState(false); //모달
 
-  const { isToggled, setIsToggled, currentUser, setCurrentUser } =
-    useContext(Context);
+  const {
+    isToggled,
+    setIsToggled,
+    currentUser,
+    setCurrentUser,
+    showDropDownMenu,
+    setShowDropDownMenu,
+  } = useContext(Context);
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const isGalleryPage = location.pathname.includes("/gallery");
+  const isSinglePage = location.pathname.includes("/single");
+  const isWritePage = location.pathname.includes("/write");
 
   //모달
   const handleClose = () => {
@@ -44,8 +57,19 @@ const Header = () => {
   return (
     <div className={style.container}>
       <div className={style.left}>
-        <span className={style.mainBanner}>내 알바야?!</span>
-        <span>
+        <span
+          className={style.mainBanner}
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          내 알바야?!
+        </span>
+        <span
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           <Span $backgroundColor={isToggled ? "skyblue" : "#FAEB78"}>
             아르바이트생들
           </Span>
@@ -53,15 +77,23 @@ const Header = () => {
         </span>
       </div>
       <div className={style.right}>
-        <ToggleButton
-          isToggled={isToggled}
-          onToggle={() => {
-            setIsToggled(!isToggled);
+        {!isGalleryPage && !isSinglePage && !isWritePage && (
+          <ToggleButton
+            isToggled={isToggled}
+            onToggle={() => {
+              setIsToggled(!isToggled);
+            }}
+          />
+        )}
+        <Span
+          $backgroundColor={isToggled ? "skyblue" : "#FAEB78"}
+          onClick={() => {
+            setShowDropDownMenu(!showDropDownMenu);
           }}
-        />
-        <Span $backgroundColor={isToggled ? "skyblue" : "#FAEB78"}>
+        >
           전체메뉴
         </Span>
+        {showDropDownMenu ? <DropDownMenu /> : ""}
         {currentUser ? (
           <>
             <span className={style.userNickname}>

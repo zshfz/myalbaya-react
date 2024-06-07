@@ -3,12 +3,16 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
+import Card from "../components/Card";
 
 const Home = () => {
-  const { brandArray } = useContext(Context);
+  const { brandArray, isToggled } = useContext(Context);
+
+  const navigate = useNavigate();
 
   const { data: brandRating } = useAxiosGet("http://localhost:8080/brands/top");
 
@@ -65,17 +69,36 @@ const Home = () => {
           {brandArray.map((item1) =>
             item1.brandImage.map((item2, index) => (
               <div className={style.imageContainer}>
-                <img key={index} src={item2} alt="" />
+                <img
+                  key={index}
+                  src={item2}
+                  alt=""
+                  onClick={() => {
+                    navigate(
+                      `/gallery/${isToggled ? "사장" : "알바"}${
+                        item1.brand[index]
+                      }`
+                    );
+                  }}
+                />
               </div>
             ))
           )}
         </Slider>
       </div>
+      <div className={style.cardContainer}>
+        {brandArray.map((item, index) => {
+          return <Card key={index} item={item} />;
+        })}
+      </div>
     </div>
   );
 };
 
-const NextArrow = styled.div`
+const NextArrow = styled.div.attrs((props) => ({
+  currentSlide: undefined,
+  slideCount: undefined,
+}))`
   z-index: 1;
   background-color: transparent;
   cursor: pointer;
@@ -84,7 +107,10 @@ const NextArrow = styled.div`
   }
 `;
 
-const PrevArrow = styled.div`
+const PrevArrow = styled.div.attrs((props) => ({
+  currentSlide: undefined,
+  slideCount: undefined,
+}))`
   z-index: 1;
   background-color: transparent;
   cursor: pointer;

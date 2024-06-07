@@ -21,6 +21,7 @@ const Context = createContext();
 const Provider = ({ children }) => {
   const [isToggled, setIsToggled] = useState(false);
   const [currentUser, setCurrentUser] = useState("");
+  const [showDropDownMenu, setShowDropDownMenu] = useState(false);
   const [brandArray] = useState([
     {
       category: "커피전문점",
@@ -75,6 +76,8 @@ const Provider = ({ children }) => {
         setIsToggled,
         currentUser,
         setCurrentUser,
+        showDropDownMenu,
+        setShowDropDownMenu,
         brandArray,
       }}
     >
