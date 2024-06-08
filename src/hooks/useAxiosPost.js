@@ -8,12 +8,14 @@ export const useAxiosPost = (
   navigate = "",
   session = false,
   setCurrentUser = "",
-  isFormData = false
+  isFormData = false,
+  setState = ""
 ) => {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e, formData = null) => {
     e.preventDefault();
+    setError("");
     try {
       let options = session ? { withCredentials: true } : {};
 
@@ -28,6 +30,9 @@ export const useAxiosPost = (
 
       const data = isFormData ? formData : input;
       const res = await axios.post(url, data, options);
+      if (setState) {
+        setState("");
+      }
       if (setCurrentUser) {
         setCurrentUser(res.data);
         localStorage.setItem("currentUser", JSON.stringify(res.data));

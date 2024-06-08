@@ -56,7 +56,13 @@ const Board = () => {
         {board &&
           board.map((item1, index1) => {
             return (
-              <div key={index1} className={style.postContainer}>
+              <div
+                key={index1}
+                className={style.postContainer}
+                onClick={() => {
+                  navigate(`/single/${item1.id}`);
+                }}
+              >
                 <div className={style.left}>
                   <span className={style.title}>{item1.title}</span>
                   <span

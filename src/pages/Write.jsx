@@ -26,7 +26,8 @@ const Write = () => {
     () => navigate(`/gallery/${id}`),
     true,
     "",
-    true
+    true,
+    ""
   );
 
   const handleImageChange = (e) => {

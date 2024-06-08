@@ -20,7 +20,8 @@ const LoginModal = (props) => {
     "",
     "",
     true,
-    setCurrentUser
+    setCurrentUser,
+    ""
   );
 
   return (
