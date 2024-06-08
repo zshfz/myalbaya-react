@@ -1,0 +1,79 @@
+.container {
+  border: 1px solid black;
+  border-radius: 8px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+    padding: 10px;
+
+    span {
+      font-size: 20px;
+      font-family: "넥슨고딕볼드";
+    }
+
+    .inputContainer {
+      display: flex;
+
+      input {
+        width: 550px;
+      }
+    }
+
+    .buttonContainer {
+      display: flex;
+      gap: 5px;
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+
+    .postContainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid lightgray;
+      border-radius: 8px;
+      margin: 10px;
+      width: 559px;
+
+      .left {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          font-family: "넥슨고딕볼드";
+          padding: 10px;
+        }
+
+        .content {
+          padding: 20px 10px;
+          font-size: 13px;
+        }
+
+        .etc {
+          color: lightgray;
+          font-size: 13px;
+          padding: 10px;
+        }
+      }
+
+      .right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          width: 100px;
+          height: 100px;
+          margin-right: 20px;
+          object-fit: contain;
+        }
+      }
+    }
+  }
+}

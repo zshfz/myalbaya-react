@@ -2,20 +2,32 @@ import axios from "axios";
 import { useState } from "react";
 
 export const useAxiosPost = (
-  url,
-  input,
+  url = "",
+  input = "",
   message = "",
   navigate = "",
-  session = "",
-  setCurrentUser = ""
+  session = false,
+  setCurrentUser = "",
+  isFormData = false
 ) => {
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, formData = null) => {
     e.preventDefault();
     try {
-      const isSessionExist = session ? { withCredentials: true } : "";
-      const res = await axios.post(url, input, isSessionExist);
+      let options = session ? { withCredentials: true } : {};
+
+      if (isFormData) {
+        options = {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+      }
+
+      const data = isFormData ? formData : input;
+      const res = await axios.post(url, data, options);
       if (setCurrentUser) {
         setCurrentUser(res.data);
         localStorage.setItem("currentUser", JSON.stringify(res.data));
@@ -27,7 +39,8 @@ export const useAxiosPost = (
         navigate();
       }
     } catch (error) {
-      setError(error.response.data);
+      setError(error.response ? error.response.data : "");
+      console.log(error);
     }
   };
 

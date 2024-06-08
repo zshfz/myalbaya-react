@@ -19,7 +19,7 @@ const LoginModal = (props) => {
     },
     "",
     "",
-    "",
+    true,
     setCurrentUser
   );
 
