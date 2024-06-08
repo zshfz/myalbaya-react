@@ -58,9 +58,12 @@
         }
 
         .etc {
-          color: lightgray;
           font-size: 13px;
           padding: 0 0 10px 10px;
+
+          img {
+            width: 25px;
+          }
         }
       }
 

@@ -4,6 +4,12 @@ import { useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { useAxiosGet } from "../hooks/useAxiosGet";
 import { useAxiosPost } from "../hooks/useAxiosPost";
+import 좋아요 from "../images/logos/좋아요.png";
+import 목록 from "../images/logos/목록.png";
+import 조회수 from "../images/logos/조회수.png";
+import 수정 from "../images/logos/수정.png";
+import 삭제 from "../images/logos/삭제.png";
+import 댓글 from "../images/logos/댓글.png";
 
 const Single = () => {
   const [comment, setComment] = useState("");
@@ -32,6 +38,8 @@ const Single = () => {
     }
   );
 
+  console.log(single);
+
   return (
     <div className={style.container}>
       <div className={style.header}>
@@ -39,12 +47,13 @@ const Single = () => {
           <span className={style.title}>{single.title}</span>
           <span>{single.author && single.author.nickname}</span>
           <span>{single.createdAt && single.createdAt.replace("T", " ")}</span>
-          <span>수정</span>
-          <span>삭제</span>
+          <img src={수정} alt="" />
+          <img src={삭제} alt="" />
         </div>
         <div className={style.right}>
-          <span>좋아요: {single.likeCount}</span>
-          <span>조회수: {single.viewCount}</span>
+          <img src={좋아요} alt="" /> {single.likeCount}
+          <img src={조회수} alt="" /> {single.viewCount}
+          <img src={댓글} alt="" /> {single.comments && single.comments.length}
         </div>
       </div>
       <div className={style.body}>
@@ -52,9 +61,9 @@ const Single = () => {
           className={style.content}
           dangerouslySetInnerHTML={createMarkup(single.content)}
         />
-        <div className={style.buttonContainer}>
-          <button>좋아요</button>
-          <button>목록으로</button>
+        <div className={style.imageContainer}>
+          <img src={좋아요} alt="" />
+          <img src={목록} alt="" />
         </div>
       </div>
       <div className={style.commentContainer}>

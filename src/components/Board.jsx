@@ -2,6 +2,9 @@ import style from "../styles/Board.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { useAxiosGet } from "../hooks/useAxiosGet";
+import 좋아요 from "../images/logos/좋아요.png";
+import 조회수 from "../images/logos/조회수.png";
+import 댓글 from "../images/logos/댓글.png";
 
 const Board = () => {
   const navigate = useNavigate();
@@ -72,7 +75,9 @@ const Board = () => {
                     )}
                   />
                   <span className={style.etc}>
-                    댓글: {item1.comments.length} 조회수: {item1.viewCount}{" "}
+                    <img src={좋아요} alt="" /> {item1.likeCount}{" "}
+                    <img src={조회수} alt="" /> {item1.viewCount}{" "}
+                    <img src={댓글} alt="" /> {item1.comments.length}{" "}
                     {item1.createdAt.replace("T", " ")}
                   </span>
                 </div>
