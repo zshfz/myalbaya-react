@@ -38,9 +38,17 @@
   .boardContainer {
     padding: 10px;
 
-    span {
-      font-size: 20px;
-      font-family: "넥슨고딕볼드";
+    .header {
+      span {
+        font-size: 20px;
+        font-family: "넥슨고딕볼드";
+      }
+    }
+
+    .body {
+      thead {
+        font-family: "넥슨고딕볼드";
+      }
     }
   }
 }

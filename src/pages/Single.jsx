@@ -1,6 +1,6 @@
 import style from "../styles/Single.module.scss";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { useAxiosGet } from "../hooks/useAxiosGet";
 import { useAxiosPost } from "../hooks/useAxiosPost";
@@ -13,6 +13,8 @@ import 댓글 from "../images/logos/댓글.png";
 
 const Single = () => {
   const [comment, setComment] = useState("");
+
+  const navigate = useNavigate();
 
   const { id } = useParams();
 
@@ -34,6 +36,19 @@ const Single = () => {
     false,
     () => {
       setComment("");
+      window.location.reload();
+    }
+  );
+
+  const { handleSubmit: handleLike } = useAxiosPost(
+    `http://localhost:8080/posts/${id}/like`,
+    "",
+    "",
+    "",
+    true,
+    "",
+    false,
+    () => {
       window.location.reload();
     }
   );
@@ -62,8 +77,14 @@ const Single = () => {
           dangerouslySetInnerHTML={createMarkup(single.content)}
         />
         <div className={style.imageContainer}>
-          <img src={좋아요} alt="" />
-          <img src={목록} alt="" />
+          <img src={좋아요} alt="" onClick={handleLike} />
+          <img
+            src={목록}
+            alt=""
+            onClick={() => {
+              navigate(-1);
+            }}
+          />
         </div>
       </div>
       <div className={style.commentContainer}>

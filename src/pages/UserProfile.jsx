@@ -6,8 +6,6 @@ import 프로필 from "../images/logos/프로필.png";
 const UserProfile = () => {
   const { data: userInfo } = useAxiosGet("http://localhost:8080/profile", true);
 
-  console.log(userInfo);
-
   return (
     <div className={style.container}>
       <div className={style.userInfoContainer}>
@@ -16,14 +14,16 @@ const UserProfile = () => {
         </div>
         <div className={style.right}>
           <span>
-            <span className={style.bold}>이름:</span> {userInfo.member.name}
+            <span className={style.bold}>이름:</span>{" "}
+            {userInfo && userInfo.member.name}
           </span>
           <span>
             <span className={style.bold}>닉네임:</span>{" "}
-            {userInfo.member.nickname}
+            {userInfo && userInfo.member.nickname}
           </span>
           <span>
-            <span className={style.bold}>이메일:</span> {userInfo.member.email}
+            <span className={style.bold}>이메일:</span>{" "}
+            {userInfo && userInfo.member.email}
           </span>
           <div className={style.buttonContainer}>
             <button>닉네임 변경</button>
@@ -47,17 +47,18 @@ const UserProfile = () => {
               </tr>
             </thead>
             <tbody>
-              {userInfo.posts.map((item, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{item.title}</td>
-                    <td>{item.author.nickname}</td>
-                    <td>{item.likeCount}</td>
-                    <td>{item.viewCount}</td>
-                    <td>{item.comments.length}</td>
-                  </tr>
-                );
-              })}
+              {userInfo.posts &&
+                userInfo.posts.map((item, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{item.title}</td>
+                      <td>{item.author.nickname}</td>
+                      <td>{item.likeCount}</td>
+                      <td>{item.viewCount}</td>
+                      <td>{item.comments.length}</td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </Table>
         </div>
