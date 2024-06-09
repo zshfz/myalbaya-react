@@ -27,6 +27,7 @@ const Header = () => {
   const isGalleryPage = location.pathname.includes("/gallery");
   const isSinglePage = location.pathname.includes("/single");
   const isWritePage = location.pathname.includes("/write");
+  const isBoardPage = location.pathname.includes("/board");
 
   //모달
   const handleClose = () => {
@@ -77,7 +78,7 @@ const Header = () => {
         </span>
       </div>
       <div className={style.right}>
-        {!isGalleryPage && !isSinglePage && !isWritePage && (
+        {!isGalleryPage && !isSinglePage && !isWritePage && !isBoardPage && (
           <ToggleButton
             isToggled={isToggled}
             onToggle={() => {

@@ -29,13 +29,43 @@ const Home = () => {
     prevArrow: <PrevArrow />,
   };
 
+  const { data: popularBoard } = useAxiosGet(
+    isToggled
+      ? "http://localhost:8080/posts/hot/boss"
+      : "http://localhost:8080/posts/hot/employee"
+  );
+
+  console.log(popularBoard);
+
   return (
     <div className={style.container}>
       <div className={style.boards}>
         <div className={style.board}>
           <div className={style.boardTitle}>
             <span>인기 게시판</span>
-            <span className={style.more}>더보기</span>
+            <span
+              className={style.more}
+              onClick={() =>
+                navigate("/board/인기게시판", { state: { popularBoard } })
+              }
+            >
+              더보기
+            </span>
+          </div>
+          <div className={style.boardContent}>
+            <ul>
+              {popularBoard &&
+                popularBoard.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      onClick={() => navigate(`/single/${item.id}`)}
+                    >
+                      {item.title}
+                    </li>
+                  );
+                })}
+            </ul>
           </div>
         </div>
         <div className={style.board}>
@@ -43,12 +73,14 @@ const Home = () => {
             <span>통합 게시판</span>
             <span className={style.more}>더보기</span>
           </div>
+          <div className={style.boardContent}></div>
         </div>
         <div className={style.board}>
           <div className={style.boardTitle}>
             <span>채용공고 게시판</span>
             <span className={style.more}>더보기</span>
           </div>
+          <div className={style.boardContent}></div>
         </div>
         <div className={style.ratingContainer}>
           <span>브랜드 평점 랭킹</span>

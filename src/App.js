@@ -4,6 +4,7 @@ import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Provider } from "./context/Context";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import Board from "./components/Board";
 import Gallery from "./pages/Gallery";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "/userprofile",
         element: <UserProfile />,
+      },
+      {
+        path: "/board/:id",
+        element: <Board />,
       },
     ],
   },
