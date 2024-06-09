@@ -92,7 +92,9 @@ const Write = () => {
       <div className={style.buttonContainer}>
         <button onClick={onSubmit}>{isUpdate ? "수정" : "등록"}</button>
         <button>취소</button>
-        {(postError || putError) && <p>{postError || putError}</p>}
+        {(postError || putError) && (
+          <p className={style.errorMessage}>{postError || putError}</p>
+        )}
       </div>
     </div>
   );

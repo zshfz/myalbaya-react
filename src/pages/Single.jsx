@@ -5,6 +5,7 @@ import DOMPurify from "dompurify";
 import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
 import { useAxiosPost } from "../hooks/useAxiosPost";
+import { useAxiosDelete } from "../hooks/useAxiosDelete";
 import 좋아요 from "../images/logos/좋아요.png";
 import 목록 from "../images/logos/목록.png";
 import 조회수 from "../images/logos/조회수.png";
@@ -27,7 +28,7 @@ const Single = () => {
 
   const { data: single } = useAxiosGet(`http://localhost:8080/posts/${id}`);
 
-  const { error, handleSubmit: handleCommentSubmit } = useAxiosPost(
+  const { error: postError, handleSubmit: handleCommentSubmit } = useAxiosPost(
     `http://localhost:8080/posts/${id}/comment`,
     {
       content: comment,
@@ -56,6 +57,15 @@ const Single = () => {
     }
   );
 
+  const { error: deleteError, handleDelete: handleSingleDelete } =
+    useAxiosDelete(
+      `http://localhost:8080/posts/${id}`,
+      "게시글이 삭제되었습니다.",
+      () =>
+        navigate(`/gallery/${isToggled ? "사장" : "알바"}${single.brand.name}`),
+      true
+    );
+
   console.log(single);
 
   return (
@@ -70,7 +80,8 @@ const Single = () => {
             alt=""
             onClick={() => navigate(`/write/${id}`, { state: { single } })}
           />
-          <img src={삭제} alt="" />
+          <img src={삭제} alt="" onClick={handleSingleDelete} />
+          {deleteError && <p className={style.errorMessage}>{deleteError}</p>}
         </div>
         <div className={style.right}>
           <img src={좋아요} alt="" /> {single.likeCount}
@@ -110,7 +121,7 @@ const Single = () => {
         </div>
       </div>
       <div className={style.commentContainer}>
-        {error && <p>{error}</p>}
+        {postError && <p>{postError}</p>}
         <div className={style.commentInputContainer}>
           <textarea
             placeholder="댓글"
