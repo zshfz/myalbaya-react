@@ -50,6 +50,12 @@
     padding: 10px;
     border-bottom: 1px solid black;
 
+    .contentImage {
+      width: 500px;
+      height: 500px;
+      object-fit: contain;
+    }
+
     .imageContainer {
       display: flex;
       justify-content: center;

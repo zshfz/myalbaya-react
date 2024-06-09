@@ -15,7 +15,7 @@ import 댓글 from "../images/logos/댓글.png";
 const Single = () => {
   const [comment, setComment] = useState("");
 
-  const { currentUser } = useContext(Context);
+  const { currentUser, isToggled } = useContext(Context);
 
   const navigate = useNavigate();
 
@@ -56,6 +56,8 @@ const Single = () => {
     }
   );
 
+  console.log(single);
+
   return (
     <div className={style.container}>
       <div className={style.header}>
@@ -63,7 +65,11 @@ const Single = () => {
           <span className={style.title}>{single.title}</span>
           <span>{single.author && single.author.nickname}</span>
           <span>{single.createdAt && single.createdAt.replace("T", " ")}</span>
-          <img src={수정} alt="" />
+          <img
+            src={수정}
+            alt=""
+            onClick={() => navigate(`/write/${id}`, { state: { single } })}
+          />
           <img src={삭제} alt="" />
         </div>
         <div className={style.right}>
@@ -73,6 +79,15 @@ const Single = () => {
         </div>
       </div>
       <div className={style.body}>
+        {single.imageUrls &&
+          single.imageUrls.map((item1, index) => (
+            <img
+              key={index}
+              className={style.contentImage}
+              src={`http://localhost:8080${item1}`}
+              alt=""
+            />
+          ))}
         <span
           className={style.content}
           dangerouslySetInnerHTML={createMarkup(single.content)}
@@ -87,7 +102,9 @@ const Single = () => {
             src={목록}
             alt=""
             onClick={() => {
-              navigate(-1);
+              navigate(
+                `/gallery/${isToggled ? "사장" : "알바"}${single.brand.name}`
+              );
             }}
           />
         </div>
