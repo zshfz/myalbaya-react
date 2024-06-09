@@ -57,7 +57,7 @@ const Single = () => {
     }
   );
 
-  const { error: deleteError, handleDelete: handleSingleDelete } =
+  const { error: deleteError1, handleDelete: handleSingleDelete } =
     useAxiosDelete(
       `http://localhost:8080/posts/${id}`,
       "게시글이 삭제되었습니다.",
@@ -65,8 +65,19 @@ const Single = () => {
         navigate(`/gallery/${isToggled ? "사장" : "알바"}${single.brand.name}`),
       true
     );
+  const { error: deleteError2, handleDelete: handleCommentDelete } =
+    useAxiosDelete(
+      "",
+      "댓글이 삭제되었습니다.",
+      () => window.location.reload(),
+      true
+    );
 
-  console.log(single);
+  const handleCommentDeleteWithId = (commentId) => {
+    handleCommentDelete(
+      `http://localhost:8080/posts/${id}/comment/${commentId}`
+    );
+  };
 
   return (
     <div className={style.container}>
@@ -81,7 +92,7 @@ const Single = () => {
             onClick={() => navigate(`/write/${id}`, { state: { single } })}
           />
           <img src={삭제} alt="" onClick={handleSingleDelete} />
-          {deleteError && <p className={style.errorMessage}>{deleteError}</p>}
+          {deleteError1 && <p className={style.errorMessage}>{deleteError1}</p>}
         </div>
         <div className={style.right}>
           <img src={좋아요} alt="" /> {single.likeCount}
@@ -122,6 +133,7 @@ const Single = () => {
       </div>
       <div className={style.commentContainer}>
         {postError && <p>{postError}</p>}
+        {deleteError2 && <p>{deleteError2}</p>}
         <div className={style.commentInputContainer}>
           <textarea
             placeholder="댓글"
@@ -146,7 +158,9 @@ const Single = () => {
                 </div>
                 <div className={style.right}>
                   <button>수정</button>
-                  <button>삭제</button>
+                  <button onClick={() => handleCommentDeleteWithId(item.id)}>
+                    삭제
+                  </button>
                 </div>
               </div>
             );
