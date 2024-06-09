@@ -103,7 +103,7 @@ const Header = () => {
               }}
             >
               {currentUser.nickname}
-              {currentUser.employmentType === "employee"
+              {currentUser.employmentType === "EMPLOYEE"
                 ? " 알바생님"
                 : " 자영업자님"}
             </span>

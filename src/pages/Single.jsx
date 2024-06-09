@@ -1,7 +1,8 @@
 import style from "../styles/Single.module.scss";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
+import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
 import { useAxiosPost } from "../hooks/useAxiosPost";
 import 좋아요 from "../images/logos/좋아요.png";
@@ -13,6 +14,8 @@ import 댓글 from "../images/logos/댓글.png";
 
 const Single = () => {
   const [comment, setComment] = useState("");
+
+  const { currentUser } = useContext(Context);
 
   const navigate = useNavigate();
 
@@ -53,8 +56,6 @@ const Single = () => {
     }
   );
 
-  console.log(single);
-
   return (
     <div className={style.container}>
       <div className={style.header}>
@@ -77,7 +78,11 @@ const Single = () => {
           dangerouslySetInnerHTML={createMarkup(single.content)}
         />
         <div className={style.imageContainer}>
-          <img src={좋아요} alt="" onClick={handleLike} />
+          {currentUser.nickname === single?.author?.nickname ? (
+            ""
+          ) : (
+            <img src={좋아요} alt="" onClick={handleLike} />
+          )}
           <img
             src={목록}
             alt=""
