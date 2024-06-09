@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import RegisterIntro from "./pages/RegisterIntro";
 import Single from "./pages/Single";
+import UserProfile from "./pages/UserProfile";
 import Write from "./pages/Write";
 
 const Layout = () => {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/write/:id",
         element: <Write />,
+      },
+      {
+        path: "/userprofile",
+        element: <UserProfile />,
       },
     ],
   },

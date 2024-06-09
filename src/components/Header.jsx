@@ -96,7 +96,12 @@ const Header = () => {
         {showDropDownMenu ? <DropDownMenu /> : ""}
         {currentUser ? (
           <>
-            <span className={style.userNickname}>
+            <span
+              className={style.userNickname}
+              onClick={() => {
+                navigate("/userprofile");
+              }}
+            >
               {currentUser.nickname}
               {currentUser.employmentType === "employee"
                 ? " 알바생님"
