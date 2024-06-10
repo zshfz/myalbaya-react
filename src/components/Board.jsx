@@ -14,11 +14,19 @@ const Board = () => {
 
   const { id } = useParams();
 
-  const { data: board } = useAxiosGet(
-    `http://localhost:8080/brands/${id.slice(2)}/posts/${
-      id.slice(0, 2) === "알바" ? "employee" : "boss"
-    }`
-  );
+  const getUrl = (id) => {
+    if (id === "통합게시판") {
+      return "";
+    } else if (id === "브랜드인증목록") {
+      return "http://localhost:8080/allow";
+    } else {
+      return `http://localhost:8080/brands/${id.slice(2)}/posts/${
+        id.slice(0, 2) === "알바" ? "employee" : "boss"
+      }`;
+    }
+  };
+
+  const { data: board } = useAxiosGet(getUrl(id), id === "브랜드인증목록");
 
   const createMarkup = (html) => {
     return { __html: DOMPurify.sanitize(html) };
@@ -30,12 +38,15 @@ const Board = () => {
       : content;
   };
 
-  console.log(popularBoard);
-
   return (
     <div className={style.container}>
       <div className={style.header}>
-        {id === "인기게시판" ? <span>인기 게시판</span> : <span>게시판</span>}
+        {id === "인기게시판" && <span>인기 게시판</span>}
+        {id === "통합게시판" && <span>통합 게시판</span>}
+        {id === "브랜드인증목록" && <span>브랜드 인증 목록</span>}
+        {id !== "인기게시판" &&
+          id !== "통합게시판" &&
+          id !== "브랜드인증목록" && <span>게시판</span>}
 
         <div className={style.inputContainer}>
           <input type="text" placeholder="검색" />
@@ -51,12 +62,14 @@ const Board = () => {
             <option>좋아요</option>
             <option>조회수</option>
           </select>
-          {id === "인기게시판" ? (
+          {id === "인기게시판" || id === "브랜드인증목록" ? (
             ""
           ) : (
             <button
               onClick={() => {
-                navigate(`/write/${id}`);
+                id === "통합게시판"
+                  ? navigate("/write/통합게시판")
+                  : navigate(`/write/${id}`);
               }}
             >
               글쓰기

@@ -28,6 +28,7 @@ const Header = () => {
   const isSinglePage = location.pathname.includes("/single");
   const isWritePage = location.pathname.includes("/write");
   const isBoardPage = location.pathname.includes("/board");
+  const isUserProfilePage = location.pathname.includes("/userprofile");
 
   //모달
   const handleClose = () => {
@@ -78,14 +79,18 @@ const Header = () => {
         </span>
       </div>
       <div className={style.right}>
-        {!isGalleryPage && !isSinglePage && !isWritePage && !isBoardPage && (
-          <ToggleButton
-            isToggled={isToggled}
-            onToggle={() => {
-              setIsToggled(!isToggled);
-            }}
-          />
-        )}
+        {!isGalleryPage &&
+          !isSinglePage &&
+          !isWritePage &&
+          !isBoardPage &&
+          !isUserProfilePage && (
+            <ToggleButton
+              isToggled={isToggled}
+              onToggle={() => {
+                setIsToggled(!isToggled);
+              }}
+            />
+          )}
         <Span
           $backgroundColor={isToggled ? "skyblue" : "#FAEB78"}
           onClick={() => {
@@ -100,13 +105,17 @@ const Header = () => {
             <span
               className={style.userNickname}
               onClick={() => {
-                navigate("/userprofile");
+                navigate("/userprofile/내프로필");
               }}
             >
               {currentUser.nickname}
               {currentUser.employmentType === "EMPLOYEE"
                 ? " 알바생님"
-                : " 자영업자님"}
+                : currentUser.employmentType === "BOSS"
+                ? " 자영업자님"
+                : currentUser.employmentType === "MASTER"
+                ? " 관리자"
+                : ""}
             </span>
             <span onClick={logout}>로그아웃</span>
           </>

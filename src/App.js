@@ -12,6 +12,7 @@ import RegisterIntro from "./pages/RegisterIntro";
 import Single from "./pages/Single";
 import UserProfile from "./pages/UserProfile";
 import Write from "./pages/Write";
+import BrandAuthWrite from "./pages/BrandAuthWrite";
 
 const Layout = () => {
   return (
@@ -45,12 +46,16 @@ const router = createBrowserRouter([
         element: <Write />,
       },
       {
-        path: "/userprofile",
+        path: "/userprofile/:id",
         element: <UserProfile />,
       },
       {
         path: "/board/:id",
         element: <Board />,
+      },
+      {
+        path: "/brandauthwrite",
+        element: <BrandAuthWrite />,
       },
     ],
   },

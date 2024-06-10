@@ -84,7 +84,13 @@ const Single = () => {
       <div className={style.header}>
         <div className={style.left}>
           <span className={style.title}>{single.title}</span>
-          <span>{single.author && single.author.nickname}</span>
+          <span
+            onClick={() => {
+              navigate(`/userprofile/${single.author.id}`);
+            }}
+          >
+            {single.author && single.author.nickname}
+          </span>
           <span>{single.createdAt && single.createdAt.replace("T", " ")}</span>
           <img
             src={수정}

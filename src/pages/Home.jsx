@@ -35,8 +35,6 @@ const Home = () => {
       : "http://localhost:8080/posts/hot/employee"
   );
 
-  console.log(popularBoard);
-
   return (
     <div className={style.container}>
       <div className={style.boards}>

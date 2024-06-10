@@ -1,10 +1,57 @@
 import style from "../styles/UserProfile.module.scss";
+import axios from "axios";
+import { useContext, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Table } from "react-bootstrap";
+import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
+import { useInput } from "../hooks/useInput";
 import 프로필 from "../images/logos/프로필.png";
 
 const UserProfile = () => {
-  const { data: userInfo } = useAxiosGet("http://localhost:8080/profile", true);
+  const [showNicknameChangeInput, setShowNicknameChangeInput] = useState(false);
+
+  const { currentUser, setCurrentUser } = useContext(Context);
+
+  const navigate = useNavigate();
+
+  const { id } = useParams();
+
+  const [nickname, handleNicknameChange, setNickname] = useInput("");
+
+  const { data: userInfo, setData: setUserInfo } = useAxiosGet(
+    id === "내프로필"
+      ? "http://localhost:8080/profile"
+      : `http://localhost:8080/members/${id}/profile`,
+    true
+  );
+
+  //닉네임 변경 (커스텀 훅 쓰니까 자꾸 이상하게 나와서 안씀)
+  const handleSubmit = async () => {
+    try {
+      await axios.post(
+        "http://localhost:8080/profile/updateNickname",
+        { newNickname: nickname },
+        {
+          withCredentials: true,
+        }
+      );
+      const updatedUserInfo = {
+        ...userInfo,
+        member: { ...userInfo.member, nickname: nickname },
+      };
+      setUserInfo(updatedUserInfo);
+      setCurrentUser({ ...currentUser, nickname: nickname });
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify({ ...currentUser, nickname: nickname })
+      );
+      setNickname("");
+      setShowNicknameChangeInput(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={style.container}>
@@ -19,15 +66,58 @@ const UserProfile = () => {
           </span>
           <span>
             <span className={style.bold}>닉네임:</span>{" "}
-            {userInfo && userInfo.member.nickname}
+            {showNicknameChangeInput ? (
+              <>
+                <input
+                  type="text"
+                  placeholder="닉네임 변경"
+                  value={nickname}
+                  onChange={handleNicknameChange}
+                />
+                <button onClick={handleSubmit}>변경</button>
+                <button
+                  onClick={() => {
+                    setShowNicknameChangeInput(false);
+                  }}
+                >
+                  취소
+                </button>
+              </>
+            ) : (
+              <> {userInfo && userInfo.member.nickname}</>
+            )}
           </span>
           <span>
             <span className={style.bold}>이메일:</span>{" "}
             {userInfo && userInfo.member.email}
           </span>
           <div className={style.buttonContainer}>
-            <button>닉네임 변경</button>
-            <button>브랜드 인증하기</button>
+            {currentUser.employmentType === "MASTER" ? (
+              <button
+                onClick={() => {
+                  navigate("/board/브랜드인증목록");
+                }}
+              >
+                브랜드 인증 목록
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    setShowNicknameChangeInput(true);
+                  }}
+                >
+                  닉네임 변경
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/brandauthwrite");
+                  }}
+                >
+                  브랜드 인증하기
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -50,7 +140,12 @@ const UserProfile = () => {
               {userInfo.posts &&
                 userInfo.posts.map((item, index) => {
                   return (
-                    <tr key={index}>
+                    <tr
+                      key={index}
+                      onClick={() => {
+                        navigate(`/single/${item.id}`);
+                      }}
+                    >
                       <td>{item.title}</td>
                       <td>{item.author.nickname}</td>
                       <td>{item.likeCount}</td>

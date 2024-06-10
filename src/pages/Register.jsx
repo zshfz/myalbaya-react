@@ -1,7 +1,7 @@
 import style from "../styles/Register.module.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import { useInput } from "../hooks/useInput";
 import { useAxiosPost } from "../hooks/useAxiosPost";
+import { useInput } from "../hooks/useInput";
 
 const Register = () => {
   const navigate = useNavigate();

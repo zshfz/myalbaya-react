@@ -24,12 +24,17 @@ const Write = () => {
   const isUpdate = singleUpdatePost.id; //새로운 글 작성인가 글 수정인가 판단
 
   const { error: postError, handleSubmit: handlePostSubmit } = useAxiosPost(
-    `http://localhost:8080/brands/${id.slice(2)}/posts/${
-      isToggled ? "boss" : "employee"
-    }/new`,
+    id === "통합게시판"
+      ? "http://localhost:8080/posts/new"
+      : `http://localhost:8080/brands/${id.slice(2)}/posts/${
+          isToggled ? "boss" : "employee"
+        }/new`,
+
     "",
     "게시글이 등록되었습니다.",
-    () => navigate(`/gallery/${id}`),
+    id === "통합게시판"
+      ? () => navigate("/board/통합게시판")
+      : () => navigate(`/gallery/${id}`),
     true,
     "",
     true,
@@ -51,6 +56,7 @@ const Write = () => {
   };
 
   const onSubmit = (e) => {
+    e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);

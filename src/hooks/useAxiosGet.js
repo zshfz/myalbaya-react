@@ -17,5 +17,5 @@ export const useAxiosGet = (url = "", session = false) => {
     getData();
   }, [url, session]);
 
-  return { data };
+  return { data, setData };
 };
