@@ -6,6 +6,7 @@ import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
 import { useAxiosPost } from "../hooks/useAxiosPost";
 import { useAxiosDelete } from "../hooks/useAxiosDelete";
+import { useAxiosPut } from "../hooks/useAxiosPut";
 import 좋아요 from "../images/logos/좋아요.png";
 import 목록 from "../images/logos/목록.png";
 import 조회수 from "../images/logos/조회수.png";
@@ -15,6 +16,9 @@ import 댓글 from "../images/logos/댓글.png";
 
 const Single = () => {
   const [comment, setComment] = useState("");
+  const [showCommentInput, setShowCommentInput] = useState(false);
+  const [updateComment, setUpdateComment] = useState("");
+  const [commentIdToUpdate, setCommentIdToUpdate] = useState("");
 
   const { currentUser, isToggled } = useContext(Context);
 
@@ -57,6 +61,21 @@ const Single = () => {
     }
   );
 
+  const { error: putError, handleSubmit: handleCommentUpdate } = useAxiosPut(
+    `http://localhost:8080/posts/${id}/comment/${commentIdToUpdate}`,
+    { content: updateComment },
+    "",
+    "",
+    true,
+    false,
+    () => {
+      setShowCommentInput(false);
+      setCommentIdToUpdate(null);
+      setUpdateComment("");
+      window.location.reload();
+    }
+  );
+
   const { error: deleteError1, handleDelete: handleSingleDelete } =
     useAxiosDelete(
       `http://localhost:8080/posts/${id}`,
@@ -65,6 +84,7 @@ const Single = () => {
         navigate(`/gallery/${isToggled ? "사장" : "알바"}${single.brand.name}`),
       true
     );
+
   const { error: deleteError2, handleDelete: handleCommentDelete } =
     useAxiosDelete(
       "",
@@ -77,6 +97,11 @@ const Single = () => {
     handleCommentDelete(
       `http://localhost:8080/posts/${id}/comment/${commentId}`
     );
+  };
+
+  const handleCommentUpdateWithId = (commentId) => {
+    setCommentIdToUpdate(commentId);
+    handleCommentUpdate();
   };
 
   return (
@@ -140,6 +165,8 @@ const Single = () => {
       <div className={style.commentContainer}>
         {postError && <p>{postError}</p>}
         {deleteError2 && <p>{deleteError2}</p>}
+        {putError && <p>{putError}</p>}
+
         <div className={style.commentInputContainer}>
           <textarea
             placeholder="댓글"
@@ -160,10 +187,44 @@ const Single = () => {
                     {item.createdAt.replace("T", " ")}
                   </span>
                   <span className={style.reply}>답글</span>
-                  <span className={style.content}>{item.content}</span>
+                  {showCommentInput && commentIdToUpdate === item.id ? (
+                    <div className={style.commentChangeInputContainer}>
+                      <textarea
+                        placeholder="댓글 수정"
+                        value={updateComment}
+                        onChange={(e) => {
+                          setUpdateComment(e.target.value);
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          handleCommentUpdateWithId(item.id);
+                        }}
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => {
+                          setShowCommentInput(false);
+                          setCommentIdToUpdate(null);
+                        }}
+                      >
+                        취소
+                      </button>
+                    </div>
+                  ) : (
+                    <span className={style.content}>{item.content}</span>
+                  )}
                 </div>
                 <div className={style.right}>
-                  <button>수정</button>
+                  <button
+                    onClick={() => {
+                      setShowCommentInput(true);
+                      setCommentIdToUpdate(item.id);
+                    }}
+                  >
+                    수정
+                  </button>
                   <button onClick={() => handleCommentDeleteWithId(item.id)}>
                     삭제
                   </button>

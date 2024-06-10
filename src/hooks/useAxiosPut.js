@@ -12,8 +12,7 @@ export const useAxiosPut = (
 ) => {
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e, formData = null) => {
-    e.preventDefault();
+  const handleSubmit = async (formData = null) => {
     try {
       let options = session ? { withCredentials: true } : {};
 
