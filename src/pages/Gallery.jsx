@@ -33,9 +33,11 @@ const Gallery = () => {
   if (brandRating) {
     const brand = brandRating.find((item) => item.name === id.slice(2));
     if (brand) {
-      averageRating = brand.averageRating;
+      averageRating = brand.averageRating.toFixed(1); // 소수점 첫째 자리까지 표시
     }
   }
+
+  console.log(brandRating);
 
   return (
     <div className={style.container}>
@@ -51,7 +53,7 @@ const Gallery = () => {
           <span>
             홈페이지: <a href={url}>{url}</a>
           </span>
-          <span>평점: {averageRating}</span>
+          <span>⭐️ {averageRating}</span>
         </div>
       </Div>
       <div className={style.tabs}>

@@ -24,6 +24,8 @@ const Home = () => {
 
   const { data: entireBoard } = useAxiosGet("http://localhost:8080/posts");
 
+  const { data: hireBoard } = useAxiosGet("http://localhost:8080/hire/all");
+
   const settings = {
     arrow: true,
     infinite: true,
@@ -108,7 +110,21 @@ const Home = () => {
               더보기
             </span>
           </div>
-          <div className={style.boardContent}></div>
+          <div className={style.boardContent}>
+            <ul>
+              {hireBoard &&
+                hireBoard.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      onClick={() => navigate(`/single/${item.id}`)}
+                    >
+                      {item.title}
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
         </div>
         <div className={style.ratingContainer}>
           <span>브랜드 평점 랭킹</span>

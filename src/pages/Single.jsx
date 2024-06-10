@@ -39,11 +39,17 @@ const Single = () => {
     return isBrandSingle[index]?.brand?.name || "";
   };
 
-  const { data: single } = useAxiosGet(
-    id.slice(0, 7) === "브랜드인증상세"
-      ? `http://localhost:8080/allow/${getBrandName()}/${id.slice(7)}`
-      : `http://localhost:8080/posts/${id}`
-  );
+  const getUrl = (id) => {
+    if (id.slice(0, 7) === "브랜드인증상세") {
+      return `http://localhost:8080/allow/${getBrandName()}/${id.slice(7)}`;
+    } else if (id.slice(0, 7) === "채용공고게시판") {
+      return `http://localhost:8080/hire/${id.slice(7)}`;
+    } else {
+      return `http://localhost:8080/posts/${id}`;
+    }
+  };
+
+  const { data: single } = useAxiosGet(getUrl(id));
 
   const { error: postError, handleSubmit: handleCommentSubmit } = useAxiosPost(
     `http://localhost:8080/posts/${id}/comment`,
@@ -60,6 +66,23 @@ const Single = () => {
       window.location.reload();
     }
   );
+
+  const handleHireCommentSubmit = async () => {
+    try {
+      await axios.post(
+        `http://localhost:8080/hire/${id.slice(7)}/comment`,
+        {
+          content: comment,
+        },
+        { withCredentials: true }
+      );
+      setComment("");
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+      alert(error.response.data);
+    }
+  };
 
   const { handleSubmit: handleLike } = useAxiosPost(
     `http://localhost:8080/posts/${id}/like`,
@@ -102,12 +125,27 @@ const Single = () => {
   const handleCommentDelete = async (commentId) => {
     try {
       await axios.delete(
-        `http://localhost:8080/posts/${id}/comment/${commentId}`,
+        id.slice(0, 7) === "채용공고게시판"
+          ? `http://localhost:8080/hire/comments/${commentId}`
+          : `http://localhost:8080/posts/${id}/comment/${commentId}`,
         {
           withCredentials: true,
         }
       );
       window.location.reload();
+    } catch (error) {
+      setError(error.response ? error.response.data : error.message);
+      console.log(error);
+    }
+  };
+
+  const handleHireDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/hire/${id.slice(7)}`, {
+        withCredentials: true,
+      });
+      alert("채용공고가 삭제되었습니다.");
+      navigate("/board/채용공고게시판");
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
       console.log(error);
@@ -166,7 +204,15 @@ const Single = () => {
             alt=""
             onClick={() => navigate(`/write/${id}`, { state: { single } })}
           />
-          <img src={삭제} alt="" onClick={handleSingleDelete} />
+          <img
+            src={삭제}
+            alt=""
+            onClick={
+              id.slice(0, 7) === "채용공고게시판"
+                ? handleHireDelete
+                : handleSingleDelete
+            }
+          />
           {id.slice(0, 7) === "브랜드인증상세" ? (
             <>
               <button
@@ -234,7 +280,15 @@ const Single = () => {
               setComment(e.target.value);
             }}
           />
-          <button onClick={handleCommentSubmit}>등록</button>
+          <button
+            onClick={
+              id.slice(0, 7) === "채용공고게시판"
+                ? handleHireCommentSubmit
+                : handleCommentSubmit
+            }
+          >
+            등록
+          </button>
         </div>
         {single.comments &&
           single.comments.map((item, index) => {
