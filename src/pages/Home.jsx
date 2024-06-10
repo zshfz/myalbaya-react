@@ -10,11 +10,17 @@ import { useAxiosGet } from "../hooks/useAxiosGet";
 import Card from "../components/Card";
 
 const Home = () => {
-  const { brandArray, isToggled } = useContext(Context);
+  const { brandArray, isToggled, currentUser } = useContext(Context);
 
   const navigate = useNavigate();
 
   const { data: brandRating } = useAxiosGet("http://localhost:8080/brands/top");
+
+  const { data: popularBoard } = useAxiosGet(
+    isToggled
+      ? "http://localhost:8080/posts/hot/boss"
+      : "http://localhost:8080/posts/hot/employee"
+  );
 
   const settings = {
     arrow: true,
@@ -28,12 +34,6 @@ const Home = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
-
-  const { data: popularBoard } = useAxiosGet(
-    isToggled
-      ? "http://localhost:8080/posts/hot/boss"
-      : "http://localhost:8080/posts/hot/employee"
-  );
 
   return (
     <div className={style.container}>

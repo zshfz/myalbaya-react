@@ -9,10 +9,10 @@ export const useAxiosDelete = (
 ) => {
   const [error, setError] = useState("");
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
       let options = session ? { withCredentials: true } : {};
-      await axios.delete(id || url, options);
+      await axios.delete(url, options);
       if (message) {
         alert(message);
       }

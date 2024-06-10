@@ -1,4 +1,5 @@
 import style from "../styles/Single.module.scss";
+import axios from "axios";
 import { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
@@ -19,6 +20,7 @@ const Single = () => {
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [updateComment, setUpdateComment] = useState("");
   const [commentIdToUpdate, setCommentIdToUpdate] = useState("");
+  const [error, setError] = useState("");
 
   const { currentUser, isToggled } = useContext(Context);
 
@@ -85,18 +87,19 @@ const Single = () => {
       true
     );
 
-  const { error: deleteError2, handleDelete: handleCommentDelete } =
-    useAxiosDelete(
-      "",
-      "댓글이 삭제되었습니다.",
-      () => window.location.reload(),
-      true
-    );
-
-  const handleCommentDeleteWithId = (commentId) => {
-    handleCommentDelete(
-      `http://localhost:8080/posts/${id}/comment/${commentId}`
-    );
+  const handleCommentDelete = async (commentId) => {
+    try {
+      await axios.delete(
+        `http://localhost:8080/posts/${id}/comment/${commentId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      setError(error.response ? error.response.data : error.message);
+      console.log(error);
+    }
   };
 
   const handleCommentUpdateWithId = (commentId) => {
@@ -123,7 +126,9 @@ const Single = () => {
             onClick={() => navigate(`/write/${id}`, { state: { single } })}
           />
           <img src={삭제} alt="" onClick={handleSingleDelete} />
-          {deleteError1 && <p className={style.errorMessage}>{deleteError1}</p>}
+          {deleteError1 && (
+            <p className={style.errorMessage}>{JSON.stringify(deleteError1)}</p>
+          )}
         </div>
         <div className={style.right}>
           <img src={좋아요} alt="" /> {single.likeCount}
@@ -163,9 +168,9 @@ const Single = () => {
         </div>
       </div>
       <div className={style.commentContainer}>
-        {postError && <p>{postError}</p>}
-        {deleteError2 && <p>{deleteError2}</p>}
-        {putError && <p>{putError}</p>}
+        {postError && <p>{JSON.stringify(postError)}</p>}
+        {error && <p>{JSON.stringify(error)}</p>}
+        {putError && <p>{JSON.stringify(putError)}</p>}
 
         <div className={style.commentInputContainer}>
           <textarea
@@ -225,7 +230,7 @@ const Single = () => {
                   >
                     수정
                   </button>
-                  <button onClick={() => handleCommentDeleteWithId(item.id)}>
+                  <button onClick={() => handleCommentDelete(item.id)}>
                     삭제
                   </button>
                 </div>

@@ -21,7 +21,7 @@ const Write = () => {
 
   const { id } = useParams();
 
-  const isUpdate = singleUpdatePost.id; //새로운 글 작성인가 글 수정인가 판단
+  const isUpdate = singleUpdatePost.id; // 새로운 글 작성인가 글 수정인가 판단
 
   const { error: postError, handleSubmit: handlePostSubmit } = useAxiosPost(
     id === "통합게시판"
@@ -29,7 +29,6 @@ const Write = () => {
       : `http://localhost:8080/brands/${id.slice(2)}/posts/${
           isToggled ? "boss" : "employee"
         }/new`,
-
     "",
     "게시글이 등록되었습니다.",
     id === "통합게시판"
@@ -55,8 +54,7 @@ const Write = () => {
     setImages(e.target.files);
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const onSubmit = () => {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
@@ -65,9 +63,9 @@ const Write = () => {
     }
 
     if (isUpdate) {
-      handlePutSubmit(e, formData);
+      handlePutSubmit(formData);
     } else {
-      handlePostSubmit(e, formData);
+      handlePostSubmit(formData);
     }
   };
 
@@ -97,9 +95,11 @@ const Write = () => {
       />
       <div className={style.buttonContainer}>
         <button onClick={onSubmit}>{isUpdate ? "수정" : "등록"}</button>
-        <button>취소</button>
+        <button onClick={() => navigate(-1)}>취소</button>
         {(postError || putError) && (
-          <p className={style.errorMessage}>{postError || putError}</p>
+          <p className={style.errorMessage}>
+            {JSON.stringify(postError || putError)}
+          </p>
         )}
       </div>
     </div>

@@ -31,7 +31,7 @@ const LoginModal = (props) => {
         <div className={style.container}>
           <span className={style.mainBanner}>내 알바야?!</span>
           <span>아르바이트생들을 위한 익명 커뮤니티 사이트</span>
-          <form onSubmit={handleSubmit}>
+          <div className={style.loginModalContainer}>
             <input
               type="email"
               placeholder="이메일"
@@ -44,10 +44,10 @@ const LoginModal = (props) => {
               value={password1}
               onChange={handlePassword1Change}
             />
-            <button type="submit">로그인</button>
-            {error && <p>{error}</p>}
-            <span>회원가입</span>
-          </form>
+            <button onClick={handleSubmit}>로그인</button>
+          </div>
+          {error && <p>{error}</p>}
+          <span>회원가입</span>
         </div>
       </Modal.Body>
     </Modal>

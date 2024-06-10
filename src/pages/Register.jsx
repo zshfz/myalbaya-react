@@ -46,11 +46,7 @@ const Register = () => {
   return (
     <div className={style.container}>
       <span>{id} 회원가입</span>
-      <form
-        onSubmit={
-          id === "아르바이트생" ? handleEmployeeSubmit : handleBossSubmit
-        }
-      >
+      <div className={style.registerContainer}>
         <input
           type="text"
           placeholder="이름"
@@ -85,13 +81,15 @@ const Register = () => {
           className={
             id === "아르바이트생" ? style.employeeButton : style.bossButton
           }
-          type="submit"
+          onClick={
+            id === "아르바이트생" ? handleEmployeeSubmit : handleBossSubmit
+          }
         >
           회원가입
         </button>
         {errorEmployee && <p>{errorEmployee}</p>}
         {errorBoss && <p>{errorBoss}</p>}
-      </form>
+      </div>
     </div>
   );
 };

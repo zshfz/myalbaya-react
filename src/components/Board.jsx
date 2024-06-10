@@ -16,7 +16,7 @@ const Board = () => {
 
   const getUrl = (id) => {
     if (id === "통합게시판") {
-      return "";
+      return "http://localhost:8080/posts";
     } else if (id === "브랜드인증목록") {
       return "http://localhost:8080/allow";
     } else {
@@ -26,7 +26,7 @@ const Board = () => {
     }
   };
 
-  const { data: board } = useAxiosGet(getUrl(id), id === "브랜드인증목록");
+  const { data: board } = useAxiosGet(getUrl(id));
 
   const createMarkup = (html) => {
     return { __html: DOMPurify.sanitize(html) };
@@ -37,6 +37,8 @@ const Board = () => {
       ? content.substring(0, length) + "..."
       : content;
   };
+
+  console.log(board);
 
   return (
     <div className={style.container}>
@@ -89,19 +91,34 @@ const Board = () => {
                 }}
               >
                 <div className={style.left}>
-                  <span className={style.title}>{item1.title}</span>
+                  <span className={style.title}>
+                    {item1.title}{" "}
+                    <span className={style.author}>
+                      {item1.author?.nickname}
+                    </span>
+                  </span>
+
                   <span
                     className={style.content}
                     dangerouslySetInnerHTML={createMarkup(
                       truncateContent(item1.content, 40)
                     )}
                   />
-                  <span className={style.etc}>
-                    <img src={좋아요} alt="" /> {item1.likeCount}{" "}
-                    <img src={조회수} alt="" /> {item1.viewCount}{" "}
-                    <img src={댓글} alt="" /> {item1.comments.length}{" "}
-                    {item1.createdAt.replace("T", " ")}
-                  </span>
+                  {id === "브랜드인증목록" ? (
+                    ""
+                  ) : (
+                    <span className={style.etc}>
+                      <img src={좋아요} alt="" /> {item1.likeCount}{" "}
+                      <img src={조회수} alt="" /> {item1.viewCount}{" "}
+                      <img src={댓글} alt="" />{" "}
+                      {item1.comments ? item1.comments.length : 0}{" "}
+                      {/* comments가 정의되었는지 확인 */}
+                      {item1.createdAt
+                        ? item1.createdAt.replace("T", " ")
+                        : ""}{" "}
+                      {/* createdAt이 정의되었는지 확인 */}
+                    </span>
+                  )}
                 </div>
                 <div className={style.right}>
                   {item1.imageUrls &&
@@ -127,7 +144,12 @@ const Board = () => {
                 }}
               >
                 <div className={style.left}>
-                  <span className={style.title}>{item1.title}</span>
+                  <span className={style.title}>
+                    {item1.title}{" "}
+                    <span className={style.author}>
+                      {item1.author?.nickname}
+                    </span>
+                  </span>
                   <span
                     className={style.content}
                     dangerouslySetInnerHTML={createMarkup(
@@ -137,8 +159,13 @@ const Board = () => {
                   <span className={style.etc}>
                     <img src={좋아요} alt="" /> {item1.likeCount}{" "}
                     <img src={조회수} alt="" /> {item1.viewCount}{" "}
-                    <img src={댓글} alt="" /> {item1.comments.length}{" "}
-                    {item1.createdAt.replace("T", " ")}
+                    <img src={댓글} alt="" />{" "}
+                    {item1.comments ? item1.comments.length : 0}{" "}
+                    {/* comments가 정의되었는지 확인 */}
+                    {item1.createdAt
+                      ? item1.createdAt.replace("T", " ")
+                      : ""}{" "}
+                    {/* createdAt이 정의되었는지 확인 */}
                   </span>
                 </div>
                 <div className={style.right}>
