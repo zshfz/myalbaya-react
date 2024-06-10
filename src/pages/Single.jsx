@@ -185,6 +185,8 @@ const Single = () => {
     }
   };
 
+  console.log(single);
+
   return (
     <div className={style.container}>
       <div className={style.header}>
@@ -246,6 +248,7 @@ const Single = () => {
               alt=""
             />
           ))}
+        <span style={{ display: "block" }}>{single.salary}원</span>
         <span
           className={style.content}
           dangerouslySetInnerHTML={createMarkup(single.content)}

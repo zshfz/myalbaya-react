@@ -45,6 +45,7 @@ const Header = () => {
       withCredentials: true,
     });
     setCurrentUser("");
+    navigate("/");
     localStorage.removeItem("currentUser");
   };
 
@@ -73,7 +74,7 @@ const Header = () => {
           }}
         >
           <Span $backgroundColor={isToggled ? "skyblue" : "#FAEB78"}>
-            아르바이트생들
+            {isToggled ? "자영업자들" : "아르바이트생"}
           </Span>
           을 위한 익명 커뮤니티 사이트
         </span>
