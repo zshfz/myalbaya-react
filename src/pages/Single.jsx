@@ -32,7 +32,11 @@ const Single = () => {
     return { __html: DOMPurify.sanitize(html) };
   };
 
-  const { data: single } = useAxiosGet(`http://localhost:8080/posts/${id}`);
+  const { data: single } = useAxiosGet(
+    id.slice(0, 7) === "브랜드인증상세"
+      ? `http://localhost:8080/allow/${id.slice(7)}`
+      : `http://localhost:8080/posts/${id}`
+  );
 
   const { error: postError, handleSubmit: handleCommentSubmit } = useAxiosPost(
     `http://localhost:8080/posts/${id}/comment`,
@@ -87,6 +91,7 @@ const Single = () => {
       true
     );
 
+  //커스텀 훅 쓰니까 에러 나서
   const handleCommentDelete = async (commentId) => {
     try {
       await axios.delete(
@@ -105,6 +110,33 @@ const Single = () => {
   const handleCommentUpdateWithId = (commentId) => {
     setCommentIdToUpdate(commentId);
     handleCommentUpdate();
+  };
+  const handleApprove = async (allowId) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/allow/approve",
+        { allowId: allowId },
+        { withCredentials: true }
+      );
+      alert(res.data);
+    } catch (error) {
+      console.log(error);
+      alert(error.response?.data);
+    }
+  };
+
+  const handleReject = async (allowId) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8080/allow/reject",
+        { allowId: allowId },
+        { withCredentials: true }
+      );
+      alert(res.data);
+    } catch (error) {
+      console.log(error);
+      alert(error.response?.data);
+    }
   };
 
   return (
@@ -126,6 +158,19 @@ const Single = () => {
             onClick={() => navigate(`/write/${id}`, { state: { single } })}
           />
           <img src={삭제} alt="" onClick={handleSingleDelete} />
+          {id.slice(0, 7) === "브랜드인증상세" ? (
+            <>
+              <button
+                onClick={() => handleApprove(single.id)}
+                style={{ marginRight: "5px" }}
+              >
+                승인
+              </button>
+              <button onClick={() => handleReject(single.id)}>거절</button>
+            </>
+          ) : (
+            ""
+          )}
           {deleteError1 && (
             <p className={style.errorMessage}>{JSON.stringify(deleteError1)}</p>
           )}
@@ -182,7 +227,7 @@ const Single = () => {
           />
           <button onClick={handleCommentSubmit}>등록</button>
         </div>
-        {single &&
+        {single.comments &&
           single.comments.map((item, index) => {
             return (
               <div key={index} className={style.comment}>

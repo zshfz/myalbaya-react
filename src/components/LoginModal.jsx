@@ -45,9 +45,9 @@ const LoginModal = (props) => {
               onChange={handlePassword1Change}
             />
             <button onClick={handleSubmit}>로그인</button>
+            {error && <p>{error}</p>}
+            <span>회원가입</span>
           </div>
-          {error && <p>{error}</p>}
-          <span>회원가입</span>
         </div>
       </Modal.Body>
     </Modal>

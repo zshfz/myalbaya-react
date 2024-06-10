@@ -13,6 +13,7 @@ import Single from "./pages/Single";
 import UserProfile from "./pages/UserProfile";
 import Write from "./pages/Write";
 import BrandAuthWrite from "./pages/BrandAuthWrite";
+import HireWrite from "./pages/HireWrite";
 
 const Layout = () => {
   return (
@@ -56,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "/brandauthwrite",
         element: <BrandAuthWrite />,
+      },
+      {
+        path: "/hirewrite",
+        element: <HireWrite />,
       },
     ],
   },

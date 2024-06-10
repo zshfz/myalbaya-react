@@ -41,7 +41,12 @@ const BrandAuthWrite = () => {
       formData.append("images", images[i]);
     }
 
-    handlePostSubmit(e, formData);
+    // formData의 내용을 확인하는 콘솔 로그 추가
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
+
+    handlePostSubmit(formData); // e를 전달하지 않고 formData만 전달
   };
 
   return (
@@ -84,7 +89,9 @@ const BrandAuthWrite = () => {
       <div className={style.buttonContainer}>
         <button onClick={onSubmit}>등록</button>
         <button>취소</button>
-        {postError && <p className={style.errorMessage}>{postError}</p>}
+        {postError && (
+          <p className={style.errorMessage}>{JSON.stringify(postError)}</p>
+        )}
       </div>
     </div>
   );

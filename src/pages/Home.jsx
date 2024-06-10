@@ -22,6 +22,8 @@ const Home = () => {
       : "http://localhost:8080/posts/hot/employee"
   );
 
+  const { data: entireBoard } = useAxiosGet("http://localhost:8080/posts");
+
   const settings = {
     arrow: true,
     infinite: true,
@@ -69,14 +71,42 @@ const Home = () => {
         <div className={style.board}>
           <div className={style.boardTitle}>
             <span>통합 게시판</span>
-            <span className={style.more}>더보기</span>
+            <span
+              className={style.more}
+              onClick={() => {
+                navigate("/board/통합게시판");
+              }}
+            >
+              더보기
+            </span>
           </div>
-          <div className={style.boardContent}></div>
+          <div className={style.boardContent}>
+            <ul>
+              {entireBoard &&
+                entireBoard.map((item, index) => {
+                  return (
+                    <li
+                      key={index}
+                      onClick={() => navigate(`/single/${item.id}`)}
+                    >
+                      {item.title}
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
         </div>
         <div className={style.board}>
           <div className={style.boardTitle}>
             <span>채용공고 게시판</span>
-            <span className={style.more}>더보기</span>
+            <span
+              className={style.more}
+              onClick={() => {
+                navigate("/board/채용공고게시판");
+              }}
+            >
+              더보기
+            </span>
           </div>
           <div className={style.boardContent}></div>
         </div>

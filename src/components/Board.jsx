@@ -1,7 +1,9 @@
-import style from "../styles/Board.module.scss";
+import React, { useState } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import DOMPurify from "dompurify";
+import ReactModal from "react-modal";
 import { useAxiosGet } from "../hooks/useAxiosGet";
+import style from "../styles/Board.module.scss";
 import 좋아요 from "../images/logos/좋아요.png";
 import 조회수 from "../images/logos/조회수.png";
 import 댓글 from "../images/logos/댓글.png";
@@ -9,10 +11,11 @@ import 댓글 from "../images/logos/댓글.png";
 const Board = () => {
   const location = useLocation();
   const popularBoard = location.state?.popularBoard || [];
-
   const navigate = useNavigate();
-
   const { id } = useParams();
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalImageSrc, setModalImageSrc] = useState("");
 
   const getUrl = (id) => {
     if (id === "통합게시판") {
@@ -38,7 +41,15 @@ const Board = () => {
       : content;
   };
 
-  console.log(board);
+  const openModal = (src) => {
+    setModalImageSrc(src);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setModalImageSrc("");
+  };
 
   return (
     <div className={style.container}>
@@ -46,9 +57,11 @@ const Board = () => {
         {id === "인기게시판" && <span>인기 게시판</span>}
         {id === "통합게시판" && <span>통합 게시판</span>}
         {id === "브랜드인증목록" && <span>브랜드 인증 목록</span>}
+        {id === "채용공고게시판" && <span>채용공고 게시판</span>}
         {id !== "인기게시판" &&
           id !== "통합게시판" &&
-          id !== "브랜드인증목록" && <span>게시판</span>}
+          id !== "브랜드인증목록" &&
+          id !== "채용공고게시판" && <span>게시판</span>}
 
         <div className={style.inputContainer}>
           <input type="text" placeholder="검색" />
@@ -69,9 +82,13 @@ const Board = () => {
           ) : (
             <button
               onClick={() => {
-                id === "통합게시판"
-                  ? navigate("/write/통합게시판")
-                  : navigate(`/write/${id}`);
+                if (id === "통합게시판") {
+                  navigate("/write/통합게시판");
+                } else if (id === "채용공고게시판") {
+                  navigate("/hirewrite");
+                } else {
+                  navigate(`/write/${id}`);
+                }
               }}
             >
               글쓰기
@@ -87,7 +104,9 @@ const Board = () => {
                 key={index1}
                 className={style.postContainer}
                 onClick={() => {
-                  navigate(`/single/${item1.id}`);
+                  id === "브랜드인증목록"
+                    ? navigate(`/single/브랜드인증상세${item1.id}`)
+                    : navigate(`/single/${item1.id}`);
                 }}
               >
                 <div className={style.left}>
@@ -112,11 +131,7 @@ const Board = () => {
                       <img src={조회수} alt="" /> {item1.viewCount}{" "}
                       <img src={댓글} alt="" />{" "}
                       {item1.comments ? item1.comments.length : 0}{" "}
-                      {/* comments가 정의되었는지 확인 */}
-                      {item1.createdAt
-                        ? item1.createdAt.replace("T", " ")
-                        : ""}{" "}
-                      {/* createdAt이 정의되었는지 확인 */}
+                      {item1.createdAt ? item1.createdAt.replace("T", " ") : ""}
                     </span>
                   )}
                 </div>
@@ -127,6 +142,10 @@ const Board = () => {
                         key={index2}
                         src={`http://localhost:8080${item2}`}
                         alt=""
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openModal(`http://localhost:8080${item2}`);
+                        }}
                       />
                     ))}
                 </div>
@@ -161,11 +180,7 @@ const Board = () => {
                     <img src={조회수} alt="" /> {item1.viewCount}{" "}
                     <img src={댓글} alt="" />{" "}
                     {item1.comments ? item1.comments.length : 0}{" "}
-                    {/* comments가 정의되었는지 확인 */}
-                    {item1.createdAt
-                      ? item1.createdAt.replace("T", " ")
-                      : ""}{" "}
-                    {/* createdAt이 정의되었는지 확인 */}
+                    {item1.createdAt ? item1.createdAt.replace("T", " ") : ""}
                   </span>
                 </div>
                 <div className={style.right}>
@@ -175,6 +190,10 @@ const Board = () => {
                         key={index2}
                         src={`http://localhost:8080${item2}`}
                         alt=""
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openModal(`http://localhost:8080${item2}`);
+                        }}
                       />
                     ))}
                 </div>
@@ -182,6 +201,15 @@ const Board = () => {
             );
           })}
       </div>
+      <ReactModal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        className={style.modal}
+        overlayClassName={style.overlay}
+      >
+        <button onClick={closeModal}>닫기</button>
+        <img src={modalImageSrc} alt="Large view" />
+      </ReactModal>
     </div>
   );
 };
