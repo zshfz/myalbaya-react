@@ -1,7 +1,7 @@
 import style from "../styles/MessageDetail.module.scss";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useInput } from "../hooks/useInput";
 import { Context } from "../context/Context";
 
@@ -9,6 +9,8 @@ const Message = () => {
   const { currentUser } = useContext(Context);
   const { id } = useParams();
   const [messageDetail, setMessageDetail] = useState("");
+
+  const navigate = useNavigate();
 
   const [message, handleMessageChange, setMessage] = useInput("");
 
@@ -81,6 +83,13 @@ const Message = () => {
             </div>
           );
         })}
+      <button
+        onClick={() => {
+          navigate("/message");
+        }}
+      >
+        목록으로
+      </button>
       <div className={style.messageInputContainer}>
         <textarea
           placeholder="메세지 내용"

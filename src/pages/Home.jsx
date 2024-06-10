@@ -10,7 +10,7 @@ import { useAxiosGet } from "../hooks/useAxiosGet";
 import Card from "../components/Card";
 
 const Home = () => {
-  const { brandArray, isToggled, currentUser } = useContext(Context);
+  const { brandArray, isToggled } = useContext(Context);
 
   const navigate = useNavigate();
 

@@ -3,7 +3,7 @@ import "react-quill/dist/quill.snow.css";
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
-import { useAxiosPost } from "../hooks/useAxiosPost";
+import axios from "axios";
 import { Context } from "../context/Context";
 
 const BrandAuthWrite = () => {
@@ -11,32 +11,37 @@ const BrandAuthWrite = () => {
   const [content, setContent] = useState("");
   const [brandName, setBrandName] = useState("");
   const [images, setImages] = useState([]);
+  const [error, setError] = useState(null);
 
   const { brandArray } = useContext(Context);
-
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     setImages(e.target.files);
   };
 
-  const { error: postError, handleSubmit: handlePostSubmit } = useAxiosPost(
-    "http://localhost:8080/allow/new",
-    "",
-    "브랜드 인증 게시글이 등록되었습니다.",
-    () => navigate("/"),
-    true,
-    "",
-    true,
-    ""
-  );
+  const handleSubmit = async (formData) => {
+    const url = `http://localhost:8080/allow/new/${brandName}`;
+    try {
+      await axios.post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      alert("브랜드 인증 게시글이 등록되었습니다.");
+      navigate("/"); // 성공 후 리디렉션
+    } catch (error) {
+      console.error("Error posting data:", error);
+      setError(error.response ? error.response.data : "Unknown error");
+    }
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
     formData.append("content", content);
-    formData.append("brandName", brandName);
     for (let i = 0; i < images.length; i++) {
       formData.append("images", images[i]);
     }
@@ -46,7 +51,7 @@ const BrandAuthWrite = () => {
       console.log(pair[0] + ": " + pair[1]);
     }
 
-    handlePostSubmit(formData); // e를 전달하지 않고 formData만 전달
+    handleSubmit(formData); // formData 전달
   };
 
   return (
@@ -66,10 +71,12 @@ const BrandAuthWrite = () => {
           setBrandName(e.target.value);
         }}
       >
-        <option>브랜드 선택</option>
+        <option value="">브랜드 선택</option>
         {brandArray.map((item1) =>
           item1.brand.map((item2, index) => (
-            <option key={index}>{item2}</option>
+            <option key={index} value={item2}>
+              {item2}
+            </option>
           ))
         )}
       </select>
@@ -88,10 +95,8 @@ const BrandAuthWrite = () => {
       />
       <div className={style.buttonContainer}>
         <button onClick={onSubmit}>등록</button>
-        <button>취소</button>
-        {postError && (
-          <p className={style.errorMessage}>{JSON.stringify(postError)}</p>
-        )}
+        <button onClick={() => navigate("/")}>취소</button>
+        {error && <p className={style.errorMessage}>{error}</p>}
       </div>
     </div>
   );

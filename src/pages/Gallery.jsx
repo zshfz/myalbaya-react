@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
 import Board from "../components/Board";
-import Rating from "../components/Rating";
+import Rating from "../pages/Rating";
 
 const Gallery = () => {
   const [whichTabClicked, setWhichTabClicked] = useState(0);

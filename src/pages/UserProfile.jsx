@@ -111,6 +111,13 @@ const UserProfile = () => {
             <span className={style.bold}>이메일:</span>{" "}
             {userInfo && userInfo.member.email}
           </span>
+          <span>
+            <span className={style.bold}>인증된 브랜드:</span>
+            {userInfo.brands?.map((item, index) => {
+              return <span key={index}>{item}</span>;
+            })}
+          </span>
+
           <div className={style.buttonContainer}>
             {currentUser.employmentType === "MASTER" ? (
               <button

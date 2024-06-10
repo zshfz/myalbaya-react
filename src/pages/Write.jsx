@@ -13,7 +13,7 @@ const Write = () => {
 
   const [title, setTitle] = useState(singleUpdatePost.title || "");
   const [content, setContent] = useState(singleUpdatePost.content || "");
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(singleUpdatePost.images || []);
 
   const { isToggled } = useContext(Context);
 

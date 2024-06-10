@@ -1,7 +1,7 @@
 import style from "../styles/Single.module.scss";
 import axios from "axios";
 import { useState, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
@@ -16,6 +16,9 @@ import 삭제 from "../images/logos/삭제.png";
 import 댓글 from "../images/logos/댓글.png";
 
 const Single = () => {
+  const location = useLocation();
+  const isBrandSingle = location.state?.board || [];
+
   const [comment, setComment] = useState("");
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [updateComment, setUpdateComment] = useState("");
@@ -25,16 +28,20 @@ const Single = () => {
   const { currentUser, isToggled } = useContext(Context);
 
   const navigate = useNavigate();
-
   const { id } = useParams();
 
   const createMarkup = (html) => {
     return { __html: DOMPurify.sanitize(html) };
   };
 
+  const getBrandName = () => {
+    const index = isBrandSingle.length > 1 ? 1 : 0;
+    return isBrandSingle[index]?.brand?.name || "";
+  };
+
   const { data: single } = useAxiosGet(
     id.slice(0, 7) === "브랜드인증상세"
-      ? `http://localhost:8080/allow/${id.slice(7)}`
+      ? `http://localhost:8080/allow/${getBrandName()}/${id.slice(7)}`
       : `http://localhost:8080/posts/${id}`
   );
 
@@ -91,7 +98,7 @@ const Single = () => {
       true
     );
 
-  //커스텀 훅 쓰니까 에러 나서
+  // 커스텀 훅 쓰니까 에러 나서
   const handleCommentDelete = async (commentId) => {
     try {
       await axios.delete(
@@ -111,11 +118,12 @@ const Single = () => {
     setCommentIdToUpdate(commentId);
     handleCommentUpdate();
   };
+
   const handleApprove = async (allowId) => {
     try {
       const res = await axios.post(
-        "http://localhost:8080/allow/approve",
-        { allowId: allowId },
+        `http://localhost:8080/allow/${single.brand.name}/${allowId}/approve`,
+        { brandName: single.brand.name, allowId: allowId },
         { withCredentials: true }
       );
       alert(res.data);

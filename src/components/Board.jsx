@@ -51,6 +51,8 @@ const Board = () => {
     setModalImageSrc("");
   };
 
+  console.log(board);
+
   return (
     <div className={style.container}>
       <div className={style.header}>
@@ -105,7 +107,9 @@ const Board = () => {
                 className={style.postContainer}
                 onClick={() => {
                   id === "브랜드인증목록"
-                    ? navigate(`/single/브랜드인증상세${item1.id}`)
+                    ? navigate(`/single/브랜드인증상세${item1.id}`, {
+                        state: { board },
+                      })
                     : navigate(`/single/${item1.id}`);
                 }}
               >
