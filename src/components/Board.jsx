@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import DOMPurify from "dompurify";
 import ReactModal from "react-modal";
@@ -31,6 +31,17 @@ const Board = () => {
 
   const { data: board } = useAxiosGet(getUrl(id));
 
+  const [sortedBoard, setSortedBoard] = useState([]);
+
+  useEffect(() => {
+    if (board) {
+      const sorted = [...board].sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setSortedBoard(sorted);
+    }
+  }, [board]);
+
   const createMarkup = (html) => {
     return { __html: DOMPurify.sanitize(html) };
   };
@@ -51,7 +62,7 @@ const Board = () => {
     setModalImageSrc("");
   };
 
-  console.log(board);
+  console.log(sortedBoard);
 
   return (
     <div className={style.container}>
@@ -99,8 +110,8 @@ const Board = () => {
         </div>
       </div>
       <div className={style.body}>
-        {board &&
-          board.map((item1, index1) => {
+        {sortedBoard &&
+          sortedBoard.map((item1, index1) => {
             return (
               <div
                 key={index1}
@@ -108,7 +119,7 @@ const Board = () => {
                 onClick={() => {
                   id === "브랜드인증목록"
                     ? navigate(`/single/브랜드인증상세${item1.id}`, {
-                        state: { board },
+                        state: { board: sortedBoard },
                       })
                     : navigate(`/single/${item1.id}`);
                 }}
