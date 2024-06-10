@@ -14,6 +14,8 @@ import UserProfile from "./pages/UserProfile";
 import Write from "./pages/Write";
 import BrandAuthWrite from "./pages/BrandAuthWrite";
 import HireWrite from "./pages/HireWrite";
+import Message from "./pages/Message";
+import MessageDetail from "./pages/MessageDetail";
 
 const Layout = () => {
   return (
@@ -61,6 +63,14 @@ const router = createBrowserRouter([
       {
         path: "/hirewrite",
         element: <HireWrite />,
+      },
+      {
+        path: "/message",
+        element: <Message />,
+      },
+      {
+        path: "/messagedetail/:id",
+        element: <MessageDetail />,
       },
     ],
   },

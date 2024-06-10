@@ -148,6 +148,7 @@ const Single = () => {
             onClick={() => {
               navigate(`/userprofile/${single.author.id}`);
             }}
+            style={{ cursor: "pointer" }}
           >
             {single.author && single.author.nickname}
           </span>

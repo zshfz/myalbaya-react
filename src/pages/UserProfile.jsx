@@ -2,7 +2,7 @@ import style from "../styles/UserProfile.module.scss";
 import axios from "axios";
 import { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Table } from "react-bootstrap";
+import { Table, Modal, Button } from "react-bootstrap";
 import { Context } from "../context/Context";
 import { useAxiosGet } from "../hooks/useAxiosGet";
 import { useInput } from "../hooks/useInput";
@@ -10,6 +10,8 @@ import 프로필 from "../images/logos/프로필.png";
 
 const UserProfile = () => {
   const [showNicknameChangeInput, setShowNicknameChangeInput] = useState(false);
+  const [message, setMessage] = useState("");
+  const [showMessageModal, setShowMessageModal] = useState(false);
 
   const { currentUser, setCurrentUser } = useContext(Context);
 
@@ -50,6 +52,24 @@ const UserProfile = () => {
       setShowNicknameChangeInput(false);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleMessageSend = async () => {
+    try {
+      await axios.post(
+        `http://localhost:8080/messages/send/${userInfo.member.id}`,
+        {
+          content: message,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      alert("메세지가 전송되었습니다.");
+      setMessage("");
+    } catch (error) {
+      alert(error.response.data);
     }
   };
 
@@ -102,20 +122,36 @@ const UserProfile = () => {
               </button>
             ) : (
               <>
-                <button
-                  onClick={() => {
-                    setShowNicknameChangeInput(true);
-                  }}
-                >
-                  닉네임 변경
-                </button>
-                <button
-                  onClick={() => {
-                    navigate("/brandauthwrite");
-                  }}
-                >
-                  브랜드 인증하기
-                </button>
+                {currentUser?.nickname === userInfo.member?.nickname ? (
+                  <>
+                    {" "}
+                    <button
+                      onClick={() => {
+                        setShowNicknameChangeInput(true);
+                      }}
+                    >
+                      닉네임 변경
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/brandauthwrite");
+                      }}
+                    >
+                      브랜드 인증하기
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {" "}
+                    <button
+                      onClick={() => {
+                        setShowMessageModal(true);
+                      }}
+                    >
+                      메세지 보내기
+                    </button>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -158,6 +194,30 @@ const UserProfile = () => {
           </Table>
         </div>
       </div>
+      <Modal show={showMessageModal} onHide={() => setShowMessageModal(false)}>
+        <Modal.Header>
+          <Modal.Title className={style.modalTitle}>메세지 보내기</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <textarea
+            className={style.textarea}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            style={{ width: "100%" }}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowMessageModal(false)}
+          >
+            닫기
+          </Button>
+          <Button variant="primary" onClick={handleMessageSend}>
+            보내기
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

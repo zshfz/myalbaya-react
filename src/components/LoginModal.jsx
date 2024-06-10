@@ -1,5 +1,6 @@
 import style from "../styles/LoginModal.module.scss";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "react-bootstrap";
 import { useInput } from "../hooks/useInput";
 import { useAxiosPost } from "../hooks/useAxiosPost";
@@ -7,6 +8,8 @@ import { Context } from "../context/Context";
 
 const LoginModal = (props) => {
   const { setCurrentUser } = useContext(Context);
+
+  const navigate = useNavigate();
 
   const [email, handleEmailChange] = useInput("");
   const [password1, handlePassword1Change] = useInput("");
@@ -46,7 +49,7 @@ const LoginModal = (props) => {
             />
             <button onClick={handleSubmit}>로그인</button>
             {error && <p>{error}</p>}
-            <span>회원가입</span>
+            <span onClick={() => navigate("/registerintro")}>회원가입</span>
           </div>
         </div>
       </Modal.Body>

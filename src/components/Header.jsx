@@ -103,6 +103,13 @@ const Header = () => {
         {currentUser ? (
           <>
             <span
+              onClick={() => {
+                navigate("/message");
+              }}
+            >
+              메세지함
+            </span>
+            <span
               className={style.userNickname}
               onClick={() => {
                 navigate("/userprofile/내프로필");
